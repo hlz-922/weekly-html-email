@@ -1,12 +1,14 @@
 import pandas as pd
 
 date = input('Sendout date [YYYY-MM-DD]: ')
-html = open('/Users/hlz/Documents/Dreamweaver/BA bulletin/'+date+'.html','w+')
-df = pd.read_excel('/Users/hlz/OneDrive - Trinity College Cambridge/BA Society/Weekly bulletin/Weekly Bulletin.xlsx')
+html_folder_path = ''
+excel_folder_path = ''
+html = open(html_folder_path + date + '.html', 'w+')
+df = pd.read_excel(excel_folder_path + 'Weekly Bulletin.xlsx')
 df = df.T.reset_index(drop=True).T
-#print(df)
+# print(df)
 
-#before my intro
+# add CSS details
 formatting = '''
 <!doctype html>
 <html>
@@ -169,7 +171,7 @@ html.write(formatting)
 
 
 
-#find my intro from excel file
+# find my intro from excel file
 intro_info = df.iloc[1:len(df),0:2]
 intro_info = intro_info.dropna()
 intro_info.columns = ['message','order']
@@ -177,7 +179,7 @@ intro_info.order = pd.to_numeric(intro_info.order)
 intro_info = intro_info.sort_values(by=['order'])
 intro_info = intro_info.reset_index(drop=True)
 
-#my intro
+# write my intro into html
 intro = '''
 <!-- 1 Column Text : BEGIN -->
             <tr>
@@ -204,7 +206,7 @@ html.write(intro)
 
 
 
-#find special announcement from excel file
+# find special announcement from excel file
 sa = df.iloc[1:len(df),4:7]
 sa = sa.dropna()
 sa.columns = ['title','message','order']
@@ -212,7 +214,7 @@ sa.order = pd.to_numeric(sa.order)
 sa = sa.sort_values(by=['order'])
 sa = sa.reset_index(drop=True)
 
-#add special announcement
+# add special announcement
 for i in range(0,len(sa)):
     special = '''
     <!-- special announcement : BEGIN -->
@@ -239,7 +241,7 @@ for i in range(0,len(sa)):
 
 
 
-#find events from excel file
+# find events from excel file
 event = df.iloc[1:len(df),9:21]
 event = event.dropna(how='all')
 event.columns = ['email','nah','nah2','order','image','type','title','date','contact','signup','join','description']
@@ -247,9 +249,9 @@ event.order = pd.to_numeric(event.order)
 event = event.sort_values(by=['order'])
 event = event.dropna(subset=['order'])
 event = event.reset_index(drop=True)
-#print(event.iloc[:,3])
+# print(event.iloc[:,3])
 
-#add summary
+# add summary
 summary = '''
             <tr>
                 <td bgcolor="#C6878F" valign="middle" style="text-align: center;">
@@ -281,7 +283,7 @@ html.write(summary)
 
 
 
-#add events
+# add events
 eb='''
 <tr>
                 <td align="center" valign="top" style="padding: 40px 0 0 0;">
@@ -325,7 +327,7 @@ html.write(eb)
 
 
 
-#find extra messages from excel file
+# find extra messages from excel file
 em = df.iloc[1:len(df),25:29]
 em = em.dropna()
 em.columns = ['title','contact','message','order']
@@ -333,7 +335,7 @@ em.order = pd.to_numeric(em.order)
 em = em.sort_values(by=['order'])
 em = em.reset_index(drop=True)
 
-#add extra messages
+# add extra messages
 if len(em)>0:
     extra = '''<!-- special announcement : BEGIN -->
             <tr>
@@ -363,7 +365,7 @@ if len(em)>0:
 
 
 
-#add final bits
+# add final bits
 end = '''
 </table></td>
 
